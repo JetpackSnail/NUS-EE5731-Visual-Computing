@@ -5,24 +5,30 @@ close all;
 
 %% User-defined parameters
 img = imread('C:\Users\MrSandBag\Desktop\pic.jpg');
-kernel = 'sobel';            % sobel, gaussian, haar_1, haar_2, haar_3, haar_4, haar_5
-sigma = 5;                      % sigma for gaussian kernel
-scale = 5;                      % integer scale of kernel
+kernel = 'haar_5';               % sobel, gaussian, haar_1, haar_2, haar_3, haar_4, haar_5
+sigma = 5;                      % sigma for use in gaussian kernel only, no effect on others
+scale = 50;                      % scale of kernel, will be rounded to nearest int if double
 
 %% Image processing
 % get gray image and convolution mask defined above
 img_gray = rgb2gray(img);
-masks = init_kernel(kernel,scale,sigma);
+masks = part1_init_kernel(kernel,scale,sigma);
 
 %% Do convolution on gray image with mask
+x_pad = floor(scale/2);
+y_pad = x_pad;
 switch kernel
     case 'sobel'
-        output_x = do_convolution(img_gray,masks{1,1},floor(scale/2));
-        output_y = do_convolution(img_gray,masks{1,2},floor(scale/2));
+        output_x = part1_do_convolution(img_gray,masks{1,1},x_pad,y_pad);
+        output_y = part1_do_convolution(img_gray,masks{1,2},x_pad,y_pad);
         output = output_x + output_y;
     case 'gaussian'
-        output = do_convolution(img_gray,masks,floor(scale/2));
+        output = part1_do_convolution(img_gray,masks,x_pad,y_pad);
     otherwise
+        x_pad = size(masks,2)-1;
+        y_pad = size(masks,1)-1;
+        output = part1_do_convolution(img_gray,masks,x_pad,y_pad);
+        
 end
 
 %% Show results

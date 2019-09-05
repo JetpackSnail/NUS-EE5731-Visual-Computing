@@ -1,11 +1,11 @@
-function mat = init_kernel(name,s,sig)
+function mat = part1_init_kernel(name,s,sig)
+s = round(s);
 switch name
     case 'sobel'
-        %           Formula for bigger Sobel filters taken from:
-        %           Expansion and Implementation of a 3x3 Sobel and Prewitt Edge
-        %           Detection Filter to a 5x5 Dimension Filter
-        %           M.Sc. Rana Abdul Rahman Lateef
-        %           Baghdad College of Economic Sciences University
+        % Formula for bigger Sobel filters taken from:
+        % Expansion and Implementation of a 3x3 Sobel and Prewitt Edge Detection Filter to a 5x5 Dimension Filter
+        % M.Sc. Rana Abdul Rahman Lateef - Baghdad College of Economic Sciences University
+        % https://www.iasj.net/iasj?func=fulltext&aId=52927
         if (mod(s,2) == 0)
             s = s + 1;
         end
@@ -43,25 +43,36 @@ switch name
         mat = mat/sum(sum(mat));
         
     case 'haar_1'
-        mat = ones(2^(s-1),2*2^(s-1));
-        mat(1:2^(s-1),1:2^(s-1)) = -mat(1:2^(s-1),1:2^(s-1));
-        
+        mat = ones(s,2*s);
+        mat(:,1:s) = -mat(:,1:s);
+%         mat = ones(2^(s-1),2*2^(s-1));
+%         mat(1:2^(s-1),1:2^(s-1)) = -mat(1:2^(s-1),1:2^(s-1));
+   
     case 'haar_2'
-        mat = ones(2*2^(s-1),2^(s-1));
-        mat(1:2^(s-1),1:2^(s-1)) = -mat(1:2^(s-1),1:2^(s-1));
+        mat = ones(2*s,s);
+        mat(1:s,:) = -mat(1:s,:); 
+%         mat = ones(2*2^(s-1),2^(s-1));
+%         mat(1:2^(s-1),1:2^(s-1)) = -mat(1:2^(s-1),1:2^(s-1));
         
     case 'haar_3'
-        mat = ones(2^(s-1),3*2^(s-1));
-        mat(:,2^(s-1)+1:2^(s-1)+2^(s-1)) = -mat(:,2^(s-1)+1:2^(s-1)+2^(s-1));
+        mat = ones(s,3*s);
+        mat(:,s+1:2*s) = -mat(:,s+1:2*s);
+%         mat = ones(2^(s-1),3*2^(s-1));
+%         mat(:,2^(s-1)+1:2^(s-1)+2^(s-1)) = -mat(:,2^(s-1)+1:2^(s-1)+2^(s-1));
         
     case 'haar_4'
-        mat = ones(3*2^(s-1),2^(s-1));
-        mat(2^(s-1)+1:2^(s-1)+2^(s-1),:) = -mat(2^(s-1)+1:2^(s-1)+2^(s-1),:);
+        mat = ones(3*s,s);
+        mat(s+1:2*s,:) = -mat(s+1:2*s,:);
+%         mat = ones(3*2^(s-1),2^(s-1));
+%         mat(2^(s-1)+1:2^(s-1)+2^(s-1),:) = -mat(2^(s-1)+1:2^(s-1)+2^(s-1),:);
         
     case 'haar_5'
-        mat = repmat(ones(2),2^(s-1));
-        mat(1:0.5*2^(s),1:0.5*2^(s)) = -mat(1:0.5*2^(s),1:0.5*2^(s));
-        mat(0.5*2^(s)+1:2^(s),0.5*2^(s)+1:2^(s)) = -mat(0.5*2^(s)+1:2^(s),0.5*2^(s)+1:2^(s));
+        mat = ones(2*s);
+        mat(1:s,1:s) = -mat(1:s,1:s);
+        mat(s+1:end,s+1:end) = -mat(s+1:end,s+1:end); 
+%         mat = repmat(ones(2),2^(s-1));
+%         mat(1:0.5*2^(s),1:0.5*2^(s)) = -mat(1:0.5*2^(s),1:0.5*2^(s));
+%         mat(0.5*2^(s)+1:2^(s),0.5*2^(s)+1:2^(s)) = -mat(0.5*2^(s)+1:2^(s),0.5*2^(s)+1:2^(s));
         
 end
 
