@@ -1,3 +1,4 @@
+%%%%%%%%%%%%%%%%%%%%%% GUI Initialisation and standard headers %%%%%%%%%%%%%%%%%%%%%%%%
 function varargout = part3_gui(varargin)
 
 % PART3_GUI MATLAB code for part3_gui.fig
@@ -43,35 +44,30 @@ end
 % End initialization code - DO NOT EDIT
 
 % --- Executes just before part3_gui is made visible.
-
 function part3_gui_OpeningFcn(hObject, eventdata, handles, varargin)
 % This function has no output args, see OutputFcn.
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 % varargin   command line arguments to part3_gui (see VARARGIN)
+handles.output = hObject;   % Choose default command line output for part3_gui
+guidata(hObject, handles);  % Update handles structure
 
-% Choose default command line output for part3_gui
-handles.output = hObject;
-%handles.numberOfClicks = 0;
-% Update handles structure
-guidata(hObject, handles);
-
-% UIWAIT makes part3_gui wait for user response (see UIRESUME)
-% uiwait(handles.figure1);
 axes(handles.axes1)
-img1 = imread('.\assg1\im01.jpg');
+path1 = '.\assg1\h1.jpg';
+img1 = imread(path1);
 im1 = image(img1);
 im1.ButtonDownFcn = @img1_clickFcn;
+set(handles.panel_img1,'Title',path1)
 
 axes(handles.axes2)
-img2 = imread('.\assg1\im02.jpg');
+path2 = '.\assg1\h2.jpg';
+img2 = imread(path2);
 im2 = image(img2);
 im2.ButtonDownFcn = @img2_clickFcn;
-
+set(handles.panel_img2,'Title',path2)
 
 % --- Outputs from this function are returned to the command line.
-
 function varargout = part3_gui_OutputFcn(hObject, eventdata, handles) 
 % varargout  cell array for returning output args (see VARARGOUT);
 % hObject    handle to figure
@@ -79,15 +75,22 @@ function varargout = part3_gui_OutputFcn(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Get default command line output from handles structure
-varargout{1} = handles.output;
+%varargout{1} = get(handles.im1_pt1,'String');
+uiwait(gcf)
+img1_mat = getpoints(handles,1);
+img2_mat = getpoints(handles,2);
+varargout{1} = img1_mat;
+varargout{2} = img2_mat;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
+%%%%%%%%%%%%%%%%%%%%%%% Image clicks: Logs points to GUI %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function img1_clickFcn(hObject, eventdata, handles)
     handles = guidata(hObject);
 
     currentpt = get(gca, 'CurrentPoint');
-    row  = round(currentpt(1,2));
-    col  = round(currentpt(1,1));
+    row  = currentpt(1,2);
+    col  = currentpt(1,1);
     
     idx1 = 1;
     cur_handle = sprintf('im1_pt%d', idx1);
@@ -100,16 +103,13 @@ function img1_clickFcn(hObject, eventdata, handles)
             set(handles.(cur_handle),'String',['Row = ', num2str(row), ', Column = ', num2str(col)]);
             idx1 = 10;
         end
-    end
-    %guidata(hObject,handles);
-    %data = guidata(hObject)
-    
+    end 
 function img2_clickFcn(hObject, eventdata, handles)
     handles = guidata(hObject);
 
     currentpt = get(gca, 'CurrentPoint');
-    row  = round(currentpt(1,2));
-    col  = round(currentpt(1,1));
+    row  = currentpt(1,2);
+    col  = currentpt(1,1);
     
     idx1 = 1;
     cur_handle = sprintf('im2_pt%d', idx1);
@@ -123,9 +123,26 @@ function img2_clickFcn(hObject, eventdata, handles)
             idx1 = 10;
         end
     end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+   
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% Reset buttons: clears points %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+function reset1_Callback(hObject, eventdata, handles)
+handles = guidata(hObject);
+for i = 1:4
+    tag = sprintf('im1_pt%d',i);
+    handles.(tag).String = "";
+end
+function reset2_Callback(hObject, eventdata, handles)
+handles = guidata(hObject);
+for i = 1:4
+    tag = sprintf('im2_pt%d',i);
+    handles.(tag).String = "";
+end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-% --- Executes on button press in calculate.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% Calculate and swap buttons %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function calculate_Callback(hObject, eventdata, handles)
     % hObject    handle to calculate (see GCBO)
     % eventdata  reserved - to be defined in a future version of MATLAB
@@ -145,29 +162,99 @@ function calculate_Callback(hObject, eventdata, handles)
     end
     
     if idx == 8
-        f = warndlg('Success','Success');
+        uiresume(gcbf);
+%         contents = cellstr(get(handles.part_no,'String'));
+%         if strcmp(contents{get(handles.part_no,'Value')},'Part 3')
+%             f = warndlg('part 3','Success');
+%             uiresume(gcbf);
+%         else
+%             f = warndlg('part 4','Success');
+%             uiresume(gcbf);
+%         end   
     end
-
-% --- Executes on button press in reset.
-function reset_Callback(hObject, eventdata, handles)
-% hObject    handle to reset (see GCBO)
+function swap_Callback(hObject, eventdata, handles)
+% hObject    handle to reset2 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 handles = guidata(hObject);
-for i = 1:2
-    for j = 1:4
-        tag = sprintf('im%d_pt%d',i,j);
-        handles.(tag).String = "";
-    end
+reset1_Callback(hObject,eventdata,handles);
+reset2_Callback(hObject,eventdata,handles);
+path1 = get(handles.panel_img1,'Title');
+path2 = get(handles.panel_img2,'Title');
+temp = path1;
+
+set(handles.panel_img1,'Title',path2);
+set(handles.panel_img2,'Title',temp);
+
+axes(handles.axes1)
+img1 = imread(path2);
+im1 = image(img1);
+im1.ButtonDownFcn = @img1_clickFcn;
+
+axes(handles.axes2)
+img2 = imread(path1);
+im2 = image(img2);
+im2.ButtonDownFcn = @img2_clickFcn;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Dropdown menu %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% --- Executes on selection change in part_no.
+function part_no_Callback(hObject, eventdata, handles)
+% hObject    handle to part_no (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns part_no contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from part_no
+contents = cellstr(get(handles.part_no,'String'));
+if strcmp(contents{get(handles.part_no,'Value')},'Part 3')
+    path1 = '.\assg1\h1.jpg';
+    path2 = '.\assg1\h2.jpg';
+else
+    path1 = '.\assg1\im01.jpg';
+    path2 = '.\assg1\im02.jpg';
 end
+axes(handles.axes1)
+img1 = imread(path1);
+im1 = image(img1);
+im1.ButtonDownFcn = @img1_clickFcn;
+set(handles.panel_img1,'Title',path1)
+
+axes(handles.axes2)
+img2 = imread(path2);
+im2 = image(img2);
+im2.ButtonDownFcn = @img2_clickFcn;
+set(handles.panel_img2,'Title',path2)
+
+reset1_Callback(hObject,eventdata,handles);
+reset2_Callback(hObject,eventdata,handles);
+% --- Executes during object creation, after setting all properties.
+function part_no_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to part_no (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
+    %guidata(hObject,handles);
+    %data = guidata(hObject)
 
-
-
-
-
-
-
-
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%% Other functions %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+function mat = getpoints(handles,num)
+mat = zeros(4,2);
+for i = 1:4
+    tag = sprintf('im%d_pt%d',num,i);
+    s = get(handles.(tag),'String');
+    com = strfind(s,',');
+    equ = strfind(s,'=');
+    row = str2num(s(equ(1,1)+2:com-1));
+    col = str2num(s(equ(1,2)+2:end));
+    mat(i,:) = [row, col];
+end

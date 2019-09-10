@@ -3,10 +3,10 @@ clc;
 clear;
 close all;
 
-img1 = imread('.\assg1\h1.jpg');
-img2 = imread('.\assg1\h2.jpg');
+%% Start GUI to save points on images
+[mat1, mat2] = part3_gui;
+disp('points saved');
 
-%% Create GUI for clicks
-
-
+%% Calculate homography matrix
+hmat(mat1,mat2);
 

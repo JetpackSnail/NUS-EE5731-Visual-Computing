@@ -5,9 +5,9 @@ close all;
 
 %% User-defined parameters
 img = imread('.\assg1\testpic1.jpg');
-kernel = 'haar_5';               % sobel, gaussian, haar_1, haar_2, haar_3, haar_4, haar_5
+kernel = 'gaussian';               % sobel, gaussian, haar_1, haar_2, haar_3, haar_4, haar_5
 sigma = 5;                      % sigma for use in gaussian kernel only, no effect on others
-scale = 1;                      % scale of kernel, will be rounded to nearest int if double
+scale = 10;                      % scale of kernel, will be rounded to nearest int if double
 
 %% Image processing
 % get gray image and convolution mask defined above
@@ -36,7 +36,7 @@ figure;
 imshow(img_gray)
 title('Original image')
 figure;
-imshow(output*2)
+imshow(output)
 title(['Image after ', kernel, ' convolution'])
 if strcmp(kernel,'gaussian')
     xlabel(['Sigma = ', num2str(sigma), ', Scale = ', num2str(scale)]);
