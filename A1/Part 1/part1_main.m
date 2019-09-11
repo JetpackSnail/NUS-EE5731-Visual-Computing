@@ -4,7 +4,7 @@ clear;
 close all;
 
 %% User-defined parameters
-img = imread('.\assg1\testpic1.jpg');
+img = imread('..\assg1\testpic1.jpg');
 kernel = 'gaussian';               % sobel, gaussian, haar_1, haar_2, haar_3, haar_4, haar_5
 sigma = 5;                      % sigma for use in gaussian kernel only, no effect on others
 scale = 10;                      % scale of kernel, will be rounded to nearest int if double

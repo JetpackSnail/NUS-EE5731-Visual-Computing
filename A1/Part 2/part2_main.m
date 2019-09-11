@@ -3,7 +3,7 @@ clc;
 clear;
 close all;
 
-img = imread('.\assg1\im01.jpg');
+img = imread('..\assg1\im01.jpg');
 img_gray = single(rgb2gray(img));
 imshow(img); hold on; title('Part 2: SIFT Features and Descriptors')
 %% Run SIFT by VLFeat
@@ -11,7 +11,7 @@ imshow(img); hold on; title('Part 2: SIFT Features and Descriptors')
 % Copyright (C) 2007-11, Andrea Vedaldi and Brian Fulkerson
 % Copyright (C) 2012-13, The VLFeat Team
 % All rights reserved.
-run('.\vlfeat-0.9.21-bin\vlfeat-0.9.21\toolbox\vl_setup.m')
+run('..\vlfeat-0.9.21-bin\vlfeat-0.9.21\toolbox\vl_setup.m')
 [keypts,desc] = vl_sift(img_gray);
 perm = randperm(size(keypts,2)) ;
 sel = perm(1:50) ;

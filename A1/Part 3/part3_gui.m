@@ -54,14 +54,14 @@ handles.output = hObject;   % Choose default command line output for part3_gui
 guidata(hObject, handles);  % Update handles structure
 
 axes(handles.axes1)
-path1 = '.\assg1\h1.jpg';
+path1 = '..\assg1\h1.jpg';
 img1 = imread(path1);
 im1 = image(img1);
 im1.ButtonDownFcn = @img1_clickFcn;
 set(handles.panel_img1,'Title',path1)
 
 axes(handles.axes2)
-path2 = '.\assg1\h2.jpg';
+path2 = '..\assg1\h2.jpg';
 img2 = imread(path2);
 im2 = image(img2);
 im2.ButtonDownFcn = @img2_clickFcn;
@@ -79,8 +79,12 @@ function varargout = part3_gui_OutputFcn(hObject, eventdata, handles)
 uiwait(gcf)
 img1_mat = getpoints(handles,1);
 img2_mat = getpoints(handles,2);
+img1 = imread(get(handles.panel_img1,'Title'));
+img2 = imread(get(handles.panel_img2,'Title'));
 varargout{1} = img1_mat;
 varargout{2} = img2_mat;
+varargout{3} = img1;
+varargout{4} = img2;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
@@ -209,11 +213,11 @@ function part_no_Callback(hObject, eventdata, handles)
 %        contents{get(hObject,'Value')} returns selected item from part_no
 contents = cellstr(get(handles.part_no,'String'));
 if strcmp(contents{get(handles.part_no,'Value')},'Part 3')
-    path1 = '.\assg1\h1.jpg';
-    path2 = '.\assg1\h2.jpg';
+    path1 = '..\assg1\h1.jpg';
+    path2 = '..\assg1\h2.jpg';
 else
-    path1 = '.\assg1\im01.jpg';
-    path2 = '.\assg1\im02.jpg';
+    path1 = '..\assg1\im01.jpg';
+    path2 = '..\assg1\im02.jpg';
 end
 axes(handles.axes1)
 img1 = imread(path1);
