@@ -1,35 +1,35 @@
 %%%%%%%%%%%%%%%%%%%%%% GUI Initialisation and standard headers %%%%%%%%%%%%%%%%%%%%%%%%
-function varargout = part3_gui(varargin)
+function varargout = part4_gui(varargin)
 
-% PART3_GUI MATLAB code for part3_gui.fig
-%      PART3_GUI, by itself, creates a new PART3_GUI or raises the existing
+% PART4_GUI MATLAB code for part4_gui.fig
+%      PART4_GUI, by itself, creates a new PART4_GUI or raises the existing
 %      singleton*.
 %
-%      H = PART3_GUI returns the handle to a new PART3_GUI or the handle to
+%      H = PART4_GUI returns the handle to a new PART4_GUI or the handle to
 %      the existing singleton*.
 %
-%      PART3_GUI('CALLBACK',hObject,eventData,handles,...) calls the local
-%      function named CALLBACK in PART3_GUI.M with the given input arguments.
+%      PART4_GUI('CALLBACK',hObject,eventData,handles,...) calls the local
+%      function named CALLBACK in PART4_GUI.M with the given input arguments.
 %
-%      PART3_GUI('Property','Value',...) creates a new PART3_GUI or raises the
+%      PART4_GUI('Property','Value',...) creates a new PART4_GUI or raises the
 %      existing singleton*.  Starting from the left, property value pairs are
-%      applied to the GUI before part3_gui_OpeningFcn gets called.  An
+%      applied to the GUI before part4_gui_OpeningFcn gets called.  An
 %      unrecognized property name or invalid value makes property application
-%      stop.  All inputs are passed to part3_gui_OpeningFcn via varargin.
+%      stop.  All inputs are passed to part4_gui_OpeningFcn via varargin.
 %
 %      *See GUI Options on GUIDE's Tools menu.  Choose "GUI allows only one
 %      instance to run (singleton)".
 %
 % See also: GUIDE, GUIDATA, GUIHANDLES
 
-% Edit the above text to modify the response to help part3_gui
+% Edit the above text to modify the response to help part4_gui
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
 gui_State = struct('gui_Name',       mfilename, ...
                    'gui_Singleton',  gui_Singleton, ...
-                   'gui_OpeningFcn', @part3_gui_OpeningFcn, ...
-                   'gui_OutputFcn',  @part3_gui_OutputFcn, ...
+                   'gui_OpeningFcn', @part4_gui_OpeningFcn, ...
+                   'gui_OutputFcn',  @part4_gui_OutputFcn, ...
                    'gui_LayoutFcn',  [] , ...
                    'gui_Callback',   []);
 if nargin && ischar(varargin{1})
@@ -43,34 +43,34 @@ else
 end
 % End initialization code - DO NOT EDIT
 
-% --- Executes just before part3_gui is made visible.
-function part3_gui_OpeningFcn(hObject, eventdata, handles, varargin)
+% --- Executes just before part4_gui is made visible.
+function part4_gui_OpeningFcn(hObject, eventdata, handles, varargin)
 % This function has no output args, see OutputFcn.
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-% varargin   command line arguments to part3_gui (see VARARGIN)
+% varargin   command line arguments to part4_gui (see VARARGIN)
 handles.output = hObject;   % Choose default command line output for part3_gui
 guidata(hObject, handles);  % Update handles structure
 
 axes(handles.axes1)
-path1 = '..\assg1\h1.jpg';
-% path1 = '..\assg1\im01.jpg';
+% path1 = '..\assg1\h1.jpg';
+path1 = '..\assg1\im01.jpg';
 img1 = imread(path1);
 im1 = image(img1);
 im1.ButtonDownFcn = @img1_clickFcn;
-set(handles.panel_img1,'Title',path1)
+set(handles.panel_img1,'Title',path1);
 
 axes(handles.axes2)
-path2 = '..\assg1\h2.jpg';
-% path2 = '..\assg1\im02.jpg';
+% path2 = '..\assg1\h2.jpg';
+path2 = '..\assg1\im02.jpg';
 img2 = imread(path2);
 im2 = image(img2);
 im2.ButtonDownFcn = @img2_clickFcn;
-set(handles.panel_img2,'Title',path2)
+set(handles.panel_img2,'Title',path2);
 
 % --- Outputs from this function are returned to the command line.
-function varargout = part3_gui_OutputFcn(hObject, eventdata, handles) 
+function varargout = part4_gui_OutputFcn(hObject, eventdata, handles) 
 % varargout  cell array for returning output args (see VARARGOUT);
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
@@ -78,7 +78,7 @@ function varargout = part3_gui_OutputFcn(hObject, eventdata, handles)
 
 % Get default command line output from handles structure
 %varargout{1} = get(handles.im1_pt1,'String');
-uiwait(gcf)
+uiwait(gcf);
 img1_mat = getpoints(handles,1);
 img2_mat = getpoints(handles,2);
 img1 = imread(get(handles.panel_img1,'Title'));
@@ -209,12 +209,12 @@ temp = path1;
 set(handles.panel_img1,'Title',path2);
 set(handles.panel_img2,'Title',temp);
 
-axes(handles.axes1)
+axes(handles.axes1);
 img1 = imread(path2);
 im1 = image(img1);
 im1.ButtonDownFcn = @img1_clickFcn;
 
-axes(handles.axes2)
+axes(handles.axes2);
 img2 = imread(path1);
 im2 = image(img2);
 im2.ButtonDownFcn = @img2_clickFcn;
