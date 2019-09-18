@@ -2,13 +2,13 @@
 clc;
 clear;
 close all;
-% run('..\vlfeat-0.9.21-bin\vlfeat-0.9.21\toolbox\vl_setup.m')
+run('..\vlfeat-0.9.21-bin\vlfeat-0.9.21\toolbox\vl_setup.m')
 img1 = imread('..\assg1\im01.jpg');
-img2 = imread('..\assg1\im02.jpg');
+img2 = imread('..\assg1\im02.jpg');     
 
 %% Choose img sides. Left image will be transformed.
-left_img = img1;
-right_img = img2;
+left_img = img2;
+right_img = img1;
 
 %% Run SIFT by VLFeat
 % VLFeat is distributed under the BSD license:
@@ -106,5 +106,4 @@ if y_d > 0              % horizontal stitching only
 end
 
 stitched = max(output,output2);
-figure; imshow(stitched); %title("Part 5: RANSAC homography and stitching");
-imwrite(stitched,'../Part 6/untitled.jpg')
+figure; imshow(stitched); title("Part 5: RANSAC homography and stitching");

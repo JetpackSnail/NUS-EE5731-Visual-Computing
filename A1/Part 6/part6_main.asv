@@ -1,0 +1,128 @@
+%% Initialise
+clc;
+clear;
+close all;
+
+run('..\vlfeat-0.9.21-bin\vlfeat-0.9.21\toolbox\vl_setup.m')
+num_of_imgs = 5;
+for i = 1:num_of_imgs
+    img_cell{i} = imread(['..\assg1\im0',num2str(i) ,'.jpg']);
+end
+
+for j = 2:2
+    if j == 2
+        img1 = img_cell{j-1};
+        img2 = img_cell{j};
+        
+        [matches1, matches2] = part6_runsift(img1,img2);
+        [best_mat1,best_mat2,best_h] = part6_ransac(matches1,matches2,img1,img2);
+        [img2_T,xmin,ymin] = part6_getoutput(img2,best_h);
+           
+        mat2_H_shifted = part6_dohomography(best_mat2,best_h) - [xmin-1 ; ymin-1 ; 0];
+        displacement = round(mean(mat2_H_shifted - best_mat1,2));
+        [img2_TP,stitched2] = part6_padstitch(displacement,img1,img2_T);
+    end
+    
+    if j ~= 2
+        img1 = img2_TP;
+        img2 = img_cell{j};
+        
+        [matches1, matches2] = part6_runsift(img1,img2);
+        %img3 = img_cell{j};
+        
+        
+        img2_2 = zeros(size(img1),'like',img1);
+        img2_2(1:size(img2,1),1:size(img2,2),1:size(img2,3)) = img2(:,:,:);
+        
+        [keypts1,desc1] = vl_sift(single(rgb2gray(img1)));
+        [keypts2,desc2] = vl_sift(single(rgb2gray(img2_2)));
+        [matches, scores] = vl_ubcmatch(desc1, desc2,uniq);
+        
+        keypt1_coord = [keypts1(1:2,:); ones(1,size(keypts1,2))];              % col,row format (x,y)
+        keypt2_coord = [keypts2(1:2,:); ones(1,size(keypts2,2))];
+        
+        
+        match_fig = [img1 img2_2];
+        
+        
+        figure; imshow(match_fig); axis on; hold on ;
+        
+        for i = 1:size(matches,2)
+            x = [keypt1_coord(1,matches(1,i)),keypt2_coord(1,matches(2,i))+ size(img1,2)];
+            y = [keypt1_coord(2,matches(1,i)),keypt2_coord(2,matches(2,i))];
+            % x = [keypt1_coord(1,matches(1,i)),keypt2_coord_shifted(1,matches(2,i))];
+            % y = [keypt1_coord(2,matches(1,i)),keypt2_coord_shifted(2,matches(2,i))];
+            plot(x,y,'color',rand(1,3),'LineWidth', 1.2); title('Part 5: Matches found from SIFT');
+        end; hold off
+        
+        
+         % Initialise RANSAC parameters
+        iter = 5000;
+        best_inline_count = 0;
+        e_threshold = 0.5;
+        
+        % reorder the matches properly
+        matches1 = keypt1_coord(:,matches(1,:));
+        matches2 = keypt2_coord(:,matches(2,:));
+        
+        % start RANSAC iterations
+        for k = 1:iter
+            % choose 4 random pairs of matches and do homography
+            idx = randperm(size(matches,2),4);
+            mat1 = matches1(:,idx);
+            mat2 = matches2(:,idx);
+            h = part6_hmat(mat2, mat1);
+            
+            % check homography for all matches and count
+            norms = vecnorm(part6_dohomography(matches2,h) - matches1) < e_threshold;
+            inline_count = sum(norms);
+            
+            % best inline count will correspond to best homography matrix
+            if inline_count > best_inline_count
+                best_norm = norms;
+                best_inline_count = inline_count;
+                best_h = h;
+            end
+        end
+        
+        [~, best_cols] = find(best_norm);
+        best_mat1 = matches1(:,best_cols);
+        best_mat2 = matches2(:,best_cols);
+        
+        figure; imshow(match_fig); axis on; hold on ;
+        for k = 1:best_inline_count
+            x = [best_mat1(1,k), best_mat2(1,k)] + [0, size(output,2)];
+            y = [best_mat1(2,k), best_mat2(2,k)] ;
+            plot(x,y,'color',rand(1,3),'LineWidth', 1.2); title('Part 5: Matches found from best RANSAC');
+        end; hold off;
+        
+        [output,xmin,ymin] = part6_getoutput(img3,best_h);
+        
+        
+        height = size(stitched2,1);         % vertical y axis
+        length = size(stitched2,2);         % horizontal x axis
+        
+        mat2_H_shifted = part6_dohomography(best_mat2,best_h) - [xmin-1 ; ymin-1 ; 0];
+        displacement = round(mean(mat2_H_shifted - best_mat1,2));
+        x_d = displacement(1,1);
+        y_d = displacement(2,1);
+        
+        %% Do padding based on displacement and stitch
+        if y_d > 0              % horizontal stitching only
+            output2 = cat(1,zeros(y_d,length,3),stitched2,zeros(size(output,1)-height-y_d,length,3));  	% add rows
+            if x_d > 0          % positve y, positive x
+                output2 = cat(2,zeros(size(output2,1),x_d,3),output2);                                  % add cols
+                output = cat(2,output,zeros(size(output,1),size(output2,2)-size(output,2),3));          % finish padding
+            else                % positve y, negative x
+                output = cat(2,zeros(size(output,1),abs(x_d),3),output);                                % add cols
+                output2 = cat(2,output2,zeros(size(output2,1),size(output,2)-size(output2,2),3));       % finish padding
+            end
+        end
+        
+        stitched3 = max(output,output2);
+        figure; imshow(stitched3); title("Part 5: RANSAC homography and stitching");
+        
+        
+
+    end 
+end

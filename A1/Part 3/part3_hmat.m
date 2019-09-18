@@ -1,3 +1,12 @@
+%%
+% Inputs:
+% mat1  = 3 by 4 matrix of 4 homogeneous points on img1. first row is x axis (column)
+% mat2  = 3 by 4 matrix of 4 homogeneous points on img2. first row is x axis (column)
+%
+% Outputs:
+% h_mat = 3 by 3 matrix that maps mat1 to mat2.  mat2 = h_mat * mat1
+
+%%
 function h_mat = part3_hmat(mat1, mat2)
 A = zeros(8,9);
 j = 1;

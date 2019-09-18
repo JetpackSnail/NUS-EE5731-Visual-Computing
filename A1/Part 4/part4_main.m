@@ -36,6 +36,3 @@ end
 stitched = max(output,output2);
 
 figure; imshow(stitched);    title("Part 4: Manual homography and stitching");
-% figure; imshow(output);      title("Transformed image after homography (padded)");
-% figure; imshow(output2);     title("Image (padded)");
-

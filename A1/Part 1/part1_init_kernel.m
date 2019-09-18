@@ -1,3 +1,13 @@
+%% 
+% Inputs:
+% name  = name of kernel (sobel, gaussian, haar_1, haar_2, haar_3, haar_4, haar_5)
+% s     = scale of kernel
+% sig   = sigma value for gaussian kernel only
+
+% Outputs:
+% mat   = matrix of kernel with appropriate scale 
+
+%%
 function mat = part1_init_kernel(name,s,sig)
 s = round(s);
 switch name
@@ -45,34 +55,23 @@ switch name
     case 'haar_1'
         mat = ones(s,2*s);
         mat(:,1:s) = -mat(:,1:s);
-%         mat = ones(2^(s-1),2*2^(s-1));
-%         mat(1:2^(s-1),1:2^(s-1)) = -mat(1:2^(s-1),1:2^(s-1));
-   
+
     case 'haar_2'
         mat = ones(2*s,s);
         mat(1:s,:) = -mat(1:s,:); 
-%         mat = ones(2*2^(s-1),2^(s-1));
-%         mat(1:2^(s-1),1:2^(s-1)) = -mat(1:2^(s-1),1:2^(s-1));
         
     case 'haar_3'
         mat = ones(s,3*s);
         mat(:,s+1:2*s) = -mat(:,s+1:2*s);
-%         mat = ones(2^(s-1),3*2^(s-1));
-%         mat(:,2^(s-1)+1:2^(s-1)+2^(s-1)) = -mat(:,2^(s-1)+1:2^(s-1)+2^(s-1));
         
     case 'haar_4'
         mat = ones(3*s,s);
         mat(s+1:2*s,:) = -mat(s+1:2*s,:);
-%         mat = ones(3*2^(s-1),2^(s-1));
-%         mat(2^(s-1)+1:2^(s-1)+2^(s-1),:) = -mat(2^(s-1)+1:2^(s-1)+2^(s-1),:);
         
     case 'haar_5'
         mat = ones(2*s);
         mat(1:s,1:s) = -mat(1:s,1:s);
         mat(s+1:end,s+1:end) = -mat(s+1:end,s+1:end); 
-%         mat = repmat(ones(2),2^(s-1));
-%         mat(1:0.5*2^(s),1:0.5*2^(s)) = -mat(1:0.5*2^(s),1:0.5*2^(s));
-%         mat(0.5*2^(s)+1:2^(s),0.5*2^(s)+1:2^(s)) = -mat(0.5*2^(s)+1:2^(s),0.5*2^(s)+1:2^(s));
         
 end
 
