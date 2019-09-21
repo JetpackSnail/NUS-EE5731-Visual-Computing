@@ -1,6 +1,6 @@
 function [best_mat1,best_mat2,best_h] = part6_ransac(matches1,matches2,img1,img2)
 % Initialise RANSAC parameters
-iter = 5000;
+iter = 7000;
 best_inline_count = 0;
 e_threshold = 0.5;
 
@@ -28,12 +28,13 @@ end
 best_mat1 = matches1(:,best_cols);
 best_mat2 = matches2(:,best_cols);
 
-match_fig = [img1 img2];
-figure; imshow(match_fig); axis on; hold on ;
-for k = 1:best_inline_count
-    x = [best_mat1(1,k), best_mat2(1,k)] + [0, size(img2,2)];
-    y = [best_mat1(2,k), best_mat2(2,k)] ;
-    plot(x,y,'color',rand(1,3),'LineWidth', 1.2); title('Part 5: Matches found from best RANSAC');
-end; hold off;
+%% for plotting
+% match_fig = [img1 img2];
+% figure; imshow(match_fig); axis on; hold on ;
+% for k = 1:best_inline_count
+%     x = [best_mat1(1,k), best_mat2(1,k)] + [0, size(img2,2)];
+%     y = [best_mat1(2,k), best_mat2(2,k)] ;
+%     plot(x,y,'color',rand(1,3),'LineWidth', 1.2); title('Part 6: Matches found from best RANSAC');
+% end; hold off;
 end
 

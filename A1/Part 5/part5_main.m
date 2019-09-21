@@ -94,7 +94,7 @@ y_d = displacement(2,1);
 
 
 %% Do padding based on displacement and stitch
-if y_d > 0              % horizontal stitching only
+if y_d > 0             
     output2 = cat(1,zeros(y_d,length,3),right_img,zeros(size(output,1)-height-y_d,length,3));  	% add rows
     if x_d > 0          % positve y, positive x
         output2 = cat(2,zeros(size(output2,1),x_d,3),output2);                                  % add cols

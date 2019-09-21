@@ -10,13 +10,15 @@ keypt2_coord = [keypts2(1:2,:); ones(1,size(keypts2,2))];
 m1 = keypt1_coord(:,matches(1,:));
 m2 = keypt2_coord(:,matches(2,:));
 
-match_fig = [img1 img2];
-figure; imshow(match_fig); axis on; hold on ;
 
-for i = 1:size(matches,2)
-    x = [keypt1_coord(1,matches(1,i)),keypt2_coord(1,matches(2,i))+ size(img1,2)];
-    y = [keypt1_coord(2,matches(1,i)),keypt2_coord(2,matches(2,i))];
-    plot(x,y,'color',rand(1,3),'LineWidth', 1.2); title('Part 5: Matches found from SIFT');
-end; hold off
+%% For plotting 
+% match_fig = [img1 img2];
+% figure; imshow(match_fig); axis on; hold on ;
+% 
+% for i = 1:size(matches,2)
+%     x = [keypt1_coord(1,matches(1,i)),keypt2_coord(1,matches(2,i))+ size(img1,2)];
+%     y = [keypt1_coord(2,matches(1,i)),keypt2_coord(2,matches(2,i))];
+%     plot(x,y,'color',rand(1,3),'LineWidth', 1.2); title('Part 6: Matches found from SIFT');
+% end; hold off
 end
 
