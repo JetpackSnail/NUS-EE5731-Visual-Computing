@@ -1,4 +1,4 @@
-function [output2,stitched] = part6_padstitch(displacement,img1,img2_T)
+function [output2,stitched] = part5_padstitch(displacement,img1,img2_T)
 h1 = size(img1,1);          % vertical y axis,
 len1 = size(img1,2);          % horizontal x axis
 h2 = size(img2_T,1);
@@ -32,6 +32,6 @@ if y_d < 0
 end
 
 stitched = max(output1,output2);
-% figure; imshow(stitched); title("Part 6: RANSAC homography and stitching");
+figure; imshow(stitched); title("Part 5: RANSAC homography and stitching");
 end
 

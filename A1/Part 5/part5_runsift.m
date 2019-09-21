@@ -1,4 +1,4 @@
-function [m1,m2] = part6_runsift(img1,img2,uniq)
+function [m1,m2] = part5_runsift(img1,img2,uniq)
 % VLFeat is distributed under the BSD license:
 % Copyright (C) 2007-11, Andrea Vedaldi and Brian Fulkerson
 % Copyright (C) 2012-13, The VLFeat Team
@@ -21,13 +21,13 @@ m2 = keypt2_coord(:,matches(2,:));
 
 
 %% For plotting 
-% match_fig = [img1 img2];
-% figure; imshow(match_fig); axis on; hold on ;
-% 
-% for i = 1:size(matches,2)
-%     x = [keypt1_coord(1,matches(1,i)),keypt2_coord(1,matches(2,i))+ size(img1,2)];
-%     y = [keypt1_coord(2,matches(1,i)),keypt2_coord(2,matches(2,i))];
-%     plot(x,y,'color',rand(1,3),'LineWidth', 1.2); title('Part 6: Matches found from SIFT');
-% end; hold off
+match_fig = [img1 img2];
+figure; imshow(match_fig); axis on; hold on ;
+
+for i = 1:size(matches,2)
+    x = [keypt1_coord(1,matches(1,i)),keypt2_coord(1,matches(2,i))+ size(img1,2)];
+    y = [keypt1_coord(2,matches(1,i)),keypt2_coord(2,matches(2,i))];
+    plot(x,y,'color',rand(1,3),'LineWidth', 1.2); title('Part 5: Matches found from SIFT');
+end; hold off
 end
 

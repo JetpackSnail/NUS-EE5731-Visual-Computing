@@ -18,12 +18,13 @@ for j = 0:num_of_imgs-1
 end
 
 %% begin stitching
+tic
 for j = 2:num_of_imgs
-    disp(['Stitch ', num2str(j),'/',num2str(num_of_imgs)]);
+    disp(['Doing stitch ', num2str(j),'/',num2str(num_of_imgs),'....']);
     if j == 2
         img1 = img_cell{order(j-1)};
     else
-        img1 = stitched2;
+        img1 = stitched;
     end
     
     img2 = img_cell{order(j)};             % img 2 is transformed
@@ -34,44 +35,11 @@ for j = 2:num_of_imgs
     
     mat2_H_shifted = part6_dohomography(best_mat2,best_h) - [xmin-1 ; ymin-1 ; 0];
     displacement = round(mean(mat2_H_shifted - best_mat1,2));
-    %[~,stitched2] = part6_padstitch(displacement,img1,img2_T);
-    h1 = size(img1,1);          % vertical y axis,
-    len1 = size(img1,2);          % horizontal x axis
-    h2 = size(img2_T,1);
-    len2 = size(img2_T,2);
-    x_d = displacement(1,1);
-    y_d = displacement(2,1);
-
-
-    if y_d < 0             
-        output2 = cat(1,zeros(abs(y_d),len2,3),img2_T,zeros(h1-h2+y_d,len2,3));  	% add rows
-        %output = cat(1,img1,zeros(abs(h1-h2+y_d),size(img1,2),3));
-        if x_d > 0          % negative y, positive x %%%% not done
-            output2 = cat(2,zeros(size(output2,1),x_d,3),output2);                                  % add cols
-            output = cat(2,img2_T,zeros(size(img2_T,1),size(output2,2)-size(img2_T,2),3));          % finish padding
-        else                % negative y, negative x
-            output2 = cat(2,zeros(size(output2,1),abs(x_d),3),output2);                             % add cols
-            output = cat(2,output,zeros(size(output,1),size(output2,2)-size(output,2),3));                                % finish padding
-        end
-    end
-
-    if y_d > 0
-        output2 = cat(1,zeros(y_d,len1,3),img1,zeros(size(img2_T,1)-h1-y_d,len1,3));  	% add rows
-        if x_d > 0          % positve y, positive x
-            output2 = cat(2,zeros(size(output2,1),x_d,3),output2);                                  % add cols
-            output = cat(2,img2_T,zeros(size(img2_T,1),size(output2,2)-size(img2_T,2),3));          % finish padding
-        else                % positve y, negative x
-            output = cat(2,zeros(size(img2_T,1),abs(x_d),3),img2_T);                                % add cols
-            output2 = cat(2,output2,zeros(size(output2,1),size(output,2)-size(output2,2),3));       % finish padding
-        end
-    end
-    disp(size(output));
-    disp(size(output2));
-    stitched = max(output,output2);
-    figure; imshow(stitched); title("Part 6: RANSAC homography and stitching");
-
+    [~,stitched] = part6_padstitch(displacement,img1,img2_T);
+    
 end
-
+figure; imshow(stitched); title("Part 6: RANSAC homography and stitching");
+disp(['Stitching took ',num2str(toc),' seconds']);
 
 
 
