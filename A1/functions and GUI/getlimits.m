@@ -1,4 +1,9 @@
-function [xmax,xmin,ymax,ymin] = part4_getlimits(input,H)
+function [xmax,xmin,ymax,ymin] = getlimits(input,H)
+% Multiplies homography matrix with the corner coordinates of input image to find the coordinates of
+% input image in new coordinate frame.  
+%   input 	= input image to find the limits of in the new coordinate frame
+%   H       = homography matrix
+%   limits	= coordinates of corners in new coordinate frame   
 height = size(input,1);         % vertical y axis
 length = size(input,2);         % horizontal x axis
 

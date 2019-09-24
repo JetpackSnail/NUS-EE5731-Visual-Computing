@@ -1,6 +1,12 @@
-function output = part3_getoutput(img1,h)
+function [output,min_x,min_y] = getoutput(img1,h)
+% Finds limits of input image to do homography on, inverse homography to sample colours from the
+% orignal in each channel
+%   img1    = input image to transform to new coordinate frame
+%   h       = homography matrix
+%   output 	= new image after transformation
+
 % get limits of input image and do homography
-[max_x, min_x, max_y, min_y] = part3_getlimits(img1,h);
+[max_x, min_x, max_y, min_y] = getlimits(img1,h);
 xdiff = round(max_x - min_x);
 ydiff = round(max_y - min_y);
 

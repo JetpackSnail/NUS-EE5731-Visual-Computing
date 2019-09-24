@@ -279,8 +279,6 @@ for i = 1:4
     equ = strfind(s,'=');
     row = str2num(s(equ(1,1)+2:com-1));
     col = str2num(s(equ(1,2)+2:end));
-    disp(row);
-    disp(col);
     %mat(i,:) = [row, col];
     mat(:,i) = [col ; row ; 1];
 end

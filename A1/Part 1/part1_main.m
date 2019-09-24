@@ -2,10 +2,11 @@
 clc;
 clear;
 close all;
+addpath('..\functions and GUI')
 
 %% User-defined parameters
 img = imread('..\assg1\testpic1.jpg');
-kernel = 'haar_5';               % sobel, gaussian, haar_1, haar_2, haar_3, haar_4, haar_5
+kernel = 'sobel';               % sobel, gaussian, haar_1, haar_2, haar_3, haar_4, haar_5
 sigma = 3;                      % sigma for use in gaussian kernel only, no effect on others
 scale = 2;                      % scale of kernel, will be rounded to nearest int if double
 

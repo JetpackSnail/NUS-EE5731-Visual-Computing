@@ -2,6 +2,7 @@
 clc;
 clear;
 close all;
+addpath('..\functions and GUI')
 
 img = imread('..\assg1\im01.jpg');
 img_gray = single(rgb2gray(img));
