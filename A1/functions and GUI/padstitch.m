@@ -22,7 +22,7 @@ end
 
 if y_d < 0
     output2 = cat(1,zeros(abs(y_d),len2,3),img2_T,zeros(h1-h2+y_d,len2,3));  	% add rows
-    output1 = cat(1,img1,zeros(abs(h1-h2+y_d),size(img1,2),3));
+    output1 = cat(1,img1,zeros(size(output2,1)-h1,len1,3));
     if x_d > 0          % negative y, positive x ()
         output1 = cat(2,zeros(size(output1,1),x_d,3),output1);                                  % add cols
         output2 = cat(2,output2,zeros(size(output2,1),size(output1,2)-size(output2,2),3));  	% finish padding
