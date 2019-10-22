@@ -12,9 +12,11 @@ addpath(genpath('..\GCMex\'));
 
 %% Parameters & Properties
 % change this value to change the weight of smoothness or prior term. high value = encourage smoothness between neightbours
-lambda = 14;
-img = imresize(imread('..\assg2\bayes_in.jpg'),0.4);   
-figure; imshow(img); set(gcf, 'Units', 'Normalized', 'OuterPosition', [0 0 1 1]);
+ratio = 3/10;
+lambda = 25;
+o_img = imread('..\assg2\bayes_in.jpg');
+img = imresize(o_img,ratio);   
+figure(1); imshow(o_img); set(gcf, 'Units', 'Normalized', 'OuterPosition', [0 0 1 1]);
 img_gray = rgb2gray(img);
 img_bin = imbinarize(img_gray,'global');
 
@@ -53,13 +55,12 @@ pairwise = pairwise + pairwise';
 
 % [X, Y] = meshgrid(1:num_of_labels, 1:num_of_labels);
 % labelcost = (X - Y).*(X - Y) * lambda;
+% for lambda = 10:1:29
 labelcost = [0 1 ; 1 0] * lambda;
-
-
 
 %   EXPANSION:: A 0-1 flag which determines if the swap or expansion method is used to solve the minimization.
 %   0 == swap, 1 == expansion. If ommitted, defaults to swap.
-[labels, E, Eafter] = GCMex(double(class), single(unary), pairwise, single(labelcost),1);
+[labels, E, Eafter] = GCMex(double(class), single(unary), pairwise, single(labelcost),0);
 new_img_bin = reshape(labels,[H,W]);
 % figure; imshow(img_bin);
 % figure; imshow(new_img_bin); title(['lambda = ',num2str(lambda)]);
@@ -75,11 +76,12 @@ for i = 1:3
     restored_img = cat(3,restored_img,c);
 end
 restored_img = uint8(restored_img);
+restored_img = imresize(restored_img,1/ratio);
 figure; imshow(restored_img); title(['lambda = ',num2str(lambda)]); set(gcf, 'Units', 'Normalized', 'OuterPosition', [0 0 1 1]);
 
 % foreground, 0,    blue,   [0; 0; 255],        source
 % background, 1,    yellow,	[245; 210; 110],    sink
+% end
 
 
 
- 
