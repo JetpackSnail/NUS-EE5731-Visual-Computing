@@ -10,7 +10,7 @@ tic;
 % change this value to change the weight of smoothness or prior term. high value = encourage smoothness between neightbours
 ratio = 65;         % ratio = number of patches per dimension (65)
 % higher  = more patches, small patchers, take longer time but maybe better results
-lambda = 45;        % smoothness factor (45)
+lambda = 50;        % smoothness factor (45)
 num_of_labels = 2;  % number of labels
 
 source_colour = reshape([0; 0; 255],[1,1,3]);       % foreground, 0, blue,   source
@@ -25,7 +25,7 @@ hor = floor(W/ratio);    % width of patch
 %% GraphCut denoising
 cleaned_img = zeros(size(img),'like',img);  % initialise canvas 
 disp('Start denoise...');
-for lambda = 400
+
 for idx_x = 1:floor(W/hor)
     for idx_y = 1:floor(H/vert)
         ylim = idx_y*vert;
@@ -44,9 +44,10 @@ for idx_x = 1:floor(W/hor)
 
     end
 end
+
 figure(1); imshow(img); title('Original noisy image');
-figure(); imshow(cleaned_img); title(['Lambda = ', num2str(lambda),' , Patch size = ',num2str(vert),' x ',num2str(hor)]); 
-end
+figure(2); imshow(cleaned_img); title(['Lambda = ', num2str(lambda),' , Patch size = ',num2str(vert),' x ',num2str(hor)]); 
+
 disp('Denoise done!');
 toc
 

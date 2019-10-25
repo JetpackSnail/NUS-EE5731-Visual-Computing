@@ -13,8 +13,8 @@
 %   EXPANSION:: A 0-1 flag which determines if the swap or expansion method is used to solve the minimization. 
 %   0 == swap, 1 == expansion. If ommitted, defaults to swap.
 clear
-W = 576;
-H = 567;
+W = 2;
+H = 3;
 for row = 0:H-1
   for col = 0:W-1
     pixel = 1+ row*W + col;
