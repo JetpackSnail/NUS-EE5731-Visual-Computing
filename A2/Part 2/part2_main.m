@@ -10,7 +10,7 @@ addpath('..\functions');
 ratio = 1;         % ratio = number of patches per dimension (1)
 % higher  = more patches, small patchers, take longer time but maybe better results
 lambda = 15;        % smoothness factor (15)
-num_of_labels = 60;  % number of labels (60)
+num_of_labels = 45;  % number of labels (60)
 r = 255/(num_of_labels - 1);
 
 %% Read images
@@ -74,7 +74,7 @@ for idx_x = 1:floor(W/hor)
         new_img_bin = reshape(labels,[h,w]);
         restored_patch = uint8(new_img_bin*r);
         cleaned_img((idx_y-1)*vert+1 : ylim , (idx_x-1)*hor+1 : xlim,:) = restored_patch;
-        
+
     end
 end
-figure(); imshow(cleaned_img); title(['labels = ', num2str(num_of_labels),'lambda = ', num2str(lambda)]);
+figure(); imshow(cleaned_img);

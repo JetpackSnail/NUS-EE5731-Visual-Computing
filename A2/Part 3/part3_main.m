@@ -4,28 +4,25 @@ clear;
 close all;
 addpath(genpath('..\GCMex\'));
 addpath('..\functions');
-tic;
 
 %% Parameters & Properties
 % change this value to change the weight of smoothness or prior term. high value = encourage smoothness between neightbours
-ratio = 65;         % ratio = number of patches per dimension (65)
+ratio = 1;         % ratio = number of patches per dimension (1)
 % higher  = more patches, small patchers, take longer time but maybe better results
-lambda = 50;        % smoothness factor (50)
-num_of_labels = 2;  % number of labels (2)
+lambda = 15;        % smoothness factor (15)
+num_of_labels = 45;  % number of labels (60)
+r = 255/(num_of_labels - 1);
 
-source_colour = reshape([0; 0; 255],[1,1,3]);       % foreground, 0, blue,   source
-sink_colour = reshape([245; 210; 110],[1,1,3]);     % background, 1, yellow, sink
+%% Read images and camera matrix
+img1 = imread('..\assg2\test00.jpg');
+img2 = imread('..\assg2\test09.jpg');
 
-%% Read images
-img = imread('..\assg2\bayes_in.jpg');
-[H, W, ~] = size(img);
+% figure(1);imshow(img1);title('left');figure(2);imshow(img2);title('right');
+[H, W, ~] = size(img1);
 vert = floor(H/ratio);   % height of patch
 hor = floor(W/ratio);    % width of patch
 
-%% GraphCut denoising
-cleaned_img = zeros(size(img),'like',img);  % initialise canvas
-disp('Start denoise...');
-
+%%
 for idx_x = 1:floor(W/hor)
     for idx_y = 1:floor(H/vert)
         ylim = idx_y*vert;
@@ -38,20 +35,25 @@ for idx_x = 1:floor(W/hor)
             xlim = W;
         end
         
-        patch = img((idx_y-1)*vert+1 : ylim , (idx_x-1)*hor+1 : xlim,:);                    % get a patch
-        patch_gray = rgb2gray(patch);
-        patch_bin = imbinarize(patch_gray,'global');
-        [h, w] = size(patch_bin);
-        
+        patch = img1((idx_y-1)*vert+1 : ylim , (idx_x-1)*hor+1 : xlim,:);    % get a patch
+        [h, w, ~] = size(patch);
         % CLASS
         % A 1xN vector which specifies the initial labels of each of the N nodes in the graph
-        class = reshape(patch_bin,1,[]);
+        
+        class = zeros(1,h*w);
+        % class = randi([0,num_of_labels-1],1,h*w);
         
         % UNARY (data)
         % A CxN matrix specifying the potentials (data term) for each of the C possible classes at each of the N nodes.
-        dist_source =   reshape(mean(abs(double(patch) - source_colour),3),1,[]);
-        dist_sink   =  	reshape(mean(abs(double(patch) - sink_colour),3),1,[]);
-        unary = [dist_source ; dist_sink];
+        unary = [];
+        for i = 0:num_of_labels-1
+            img2_r = cat(2,img2(:,1+i:end,:),zeros(H,i,3));
+            img2_r_crop = img2_r((idx_y-1)*vert+1 : ylim , (idx_x-1)*hor+1 : xlim,:);
+            diff = double(patch) -  double(img2_r_crop);
+            norms = vecnorm(diff,2,3);
+            norms =  reshape(norms,1,[]);
+            unary = [unary;norms];
+        end
         
         % PAIRWISE (prior)
         % An NxN sparse matrix specifying the graph structure and cost for each link between nodes in the graph.
@@ -63,29 +65,16 @@ for idx_x = 1:floor(W/hor)
         
         % LABELCOST
         % A CxC matrix specifying the fixed label cost for the labels of each adjacent node in the graph.
-        labelcost = [0 1 ; 1 0] * lambda;
+        % labelcost = (ones(num_of_labels) - eye(num_of_labels)) * lambda;
+        labelcost = (meshgrid(1:num_of_labels) - meshgrid(1:num_of_labels)') * lambda;
         
         % EXPANSION:: A 0-1 flag which determines if the swap or expansion method is used to solve the minimization.
         % 0 == swap, 1 == expansion. If ommitted, defaults to swap.
         [labels, ~, ~] = GCMex(double(class), single(unary), pairwise, single(labelcost),1);
         new_img_bin = reshape(labels,[h,w]);
-        
-        restored_img  = [];
-        
-        for i = 1:3
-            c = zeros(h,w);
-            c(new_img_bin == 0) = source_colour(:,:,i);
-            c(new_img_bin == 1) = sink_colour(:,:,i);
-            restored_img = cat(3,restored_img,c);
-        end
-        restored_patch = uint8(restored_img);
-        cleaned_img((idx_y-1)*vert+1 : ylim , (idx_x-1)*hor+1 : xlim,:) = restored_patch;	% add patch to canvas
+        restored_patch = uint8(new_img_bin*r);
+        cleaned_img((idx_y-1)*vert+1 : ylim , (idx_x-1)*hor+1 : xlim,:) = restored_patch;
+
     end
 end
-
-figure(1); imshow(img); title('Original noisy image');
-figure(2); imshow(cleaned_img); title(['Lambda = ', num2str(lambda),' , Patch size = ',num2str(vert),' x ',num2str(hor)]);
-
-disp('Denoise done!');
-toc
-
+figure(); imshow(cleaned_img);
