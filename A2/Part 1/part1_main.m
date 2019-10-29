@@ -3,7 +3,6 @@ clc;
 clear;
 close all;
 addpath(genpath('..\GCMex\'));
-addpath('..\functions');
 tic;
 
 %% Parameters & Properties
