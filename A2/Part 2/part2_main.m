@@ -1,3 +1,4 @@
+%% Initialise
 clc;
 clear;
 close all;
@@ -8,7 +9,7 @@ addpath('..\functions');
 % change this value to change the weight of smoothness or prior term. high value = encourage smoothness between neightbours
 ratio = 1;         % ratio = number of patches per dimension (1)
 % higher  = more patches, small patchers, take longer time but maybe better results
-lambda = 15;        % smoothness factor (15)
+lambda = 1;        % smoothness factor (15)
 num_of_labels = 60;  % number of labels (60)
 r = 255/(num_of_labels - 1);
 
@@ -52,6 +53,7 @@ for idx_x = 1:floor(W/hor)
             norms = vecnorm(diff,2,3);
             norms =  reshape(norms,1,[]);
             unary = [unary;norms];
+            unary = min(unary,40);
         end
         
         % PAIRWISE (prior)
@@ -65,7 +67,7 @@ for idx_x = 1:floor(W/hor)
         % LABELCOST
         % A CxC matrix specifying the fixed label cost for the labels of each adjacent node in the graph.
         % labelcost = (ones(num_of_labels) - eye(num_of_labels)) * lambda;
-        labelcost = (meshgrid(1:num_of_labels) - meshgrid(1:num_of_labels)') * lambda;
+        labelcost = min(abs((meshgrid(1:num_of_labels) - meshgrid(1:num_of_labels)')),3) * lambda;
         
         % EXPANSION:: A 0-1 flag which determines if the swap or expansion method is used to solve the minimization.
         % 0 == swap, 1 == expansion. If ommitted, defaults to swap.

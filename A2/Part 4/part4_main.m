@@ -17,7 +17,7 @@ r = 255/(num_of_labels - 1);
 img1 = imread('..\assg2\test00.jpg');
 img2 = imread('..\assg2\test09.jpg');
 
-[K,R,T] = get_camera_matrices('..\assg2\camera_matrices.txt',2);
+[K,R,T] = get_camera_matrices('..\assg2\Road\Road\cameras.txt',5);
 
 
 

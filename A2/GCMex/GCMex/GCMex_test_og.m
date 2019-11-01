@@ -29,13 +29,3 @@ fprintf('unique(labels) should be [0 4] and is: [');
 fprintf('%d ', unique(labels));
 fprintf(']\n');
 
-
-r = H;                         % Get the matrix size
-c = W;
-diagVec1 = sparse(repmat([ones(c-1, 1); 0], r, 1));  % Make the first diagonal vector
-                                             %   (for horizontal connections)
-diagVec1 = diagVec1(1:end-1);                % Remove the last value
-diagVec2 = sparse(ones(c*(r-1), 1));                 % Make the second diagonal vector
-                                             %   (for vertical connections)
-pairwise2 = diag(diagVec1, 1) + diag(diagVec2, c);   % Add the diagonals to a zero matrix
-pairwise2 = pairwise2 + pairwise2';
