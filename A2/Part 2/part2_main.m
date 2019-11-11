@@ -4,18 +4,19 @@ clear;
 close all;
 addpath(genpath('..\GCMex\'));
 addpath('..\functions');
+tic
 
 %% Parameters & Properties
 % change this value to change the weight of smoothness or prior term. high value = encourage smoothness between neightbours
 ratio = 1;         % ratio = number of patches per dimension (1)
 % higher  = more patches, small patchers, take longer time but maybe better results
-lambda = 1;        % smoothness factor (15)
+lambda = 1;        % smoothness factor (1)
 num_of_labels = 60;  % number of labels (60)
 r = 255/(num_of_labels - 1);
 
 %% Read images
-img1 = imread('..\assg2\left.png');
-img2 = imread('..\assg2\right.png');
+img1 = imread('..\assg2\right.png');
+img2 = imread('..\assg2\left.png');
 
 % figure(1);imshow(img1);title('left');figure(2);imshow(img2);title('right');
 [H, W, ~] = size(img1);
@@ -47,13 +48,13 @@ for idx_x = 1:floor(W/hor)
         % A CxN matrix specifying the potentials (data term) for each of the C possible classes at each of the N nodes.
         unary = [];
         for i = 0:num_of_labels-1
-            img2_r = cat(2,img2(:,1+i:end,:),zeros(H,i,3));
+            img2_r = cat(2,zeros(H,i,3),img2(:,1:end-i,:));
             img2_r_crop = img2_r((idx_y-1)*vert+1 : ylim , (idx_x-1)*hor+1 : xlim,:);
             diff = double(patch) -  double(img2_r_crop);
             norms = vecnorm(diff,2,3);
             norms =  reshape(norms,1,[]);
             unary = [unary;norms];
-            unary = min(unary,40);
+            unary = min(unary,30);
         end
         
         % PAIRWISE (prior)
@@ -78,4 +79,5 @@ for idx_x = 1:floor(W/hor)
         
     end
 end
+toc
 figure(); imshow(cleaned_img); title(['labels = ', num2str(num_of_labels),'lambda = ', num2str(lambda)]);
